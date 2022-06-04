@@ -34,6 +34,7 @@ module.exports = typeDefs = gql `
     type Message {
         _id: ID!,
         user: User!,
+        conversation: Conversation!
         body: String,
         media: [String]
         createdAt: String

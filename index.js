@@ -4,7 +4,7 @@ const cors = require('cors')
 const connectMongoDB = require('./config/mongodb')
 const { ApolloServer } = require('apollo-server-express')
 const typeDefs = require('./graphql/typeDefs')
-const resolvers = require('./graphql/resolvers/user')
+const resolvers = require('./graphql/resolvers')
 const getAuthToken = require('./utils/getAuthToken')
 
 require('dotenv').config();
