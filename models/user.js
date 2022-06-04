@@ -22,6 +22,19 @@ const userSchema = new mongoose.Schema({
             ref: 'Conversation'
         }
     ],
+    pending_contacts: [
+        {
+            user: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'User'
+            },
+            status: {
+                type: String,
+                enum: ['Sent', 'Received']
+            },
+            createdAt: Number
+        }
+    ],
     contacts: [
         {
             type: mongoose.Schema.Types.ObjectId,
