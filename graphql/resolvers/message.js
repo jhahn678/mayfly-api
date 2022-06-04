@@ -1,12 +1,12 @@
 const User = require('../../models/user')
 const Conversation = require('../../models/conversation')
-const Messsage = require('../../models/message')
+const Message = require('../../models/message')
 const AuthError = require('../../utils/AuthError')
 
 module.exports = {
     Query: { 
-        getMessage: async (_, { messageid }) => {
-            return (await Messsage.findById(messageid))
+        getMessage: async (_, { messageId }) => {
+            return (await Message.findById(messageId))
         }
     },
     Mutation: {
@@ -15,7 +15,8 @@ module.exports = {
             const newMessage = new Message({ user: auth._id, conversation: conversationId, body})
             const message = await newMessage.save()
             await Conversation.findByIdAndUpdate(conversationId, { 
-                $push: { messages: message._id }
+                $push: { messages: message._id },
+                $set: { latest_message: message._id }
             })
             return message;
         }

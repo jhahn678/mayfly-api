@@ -15,8 +15,13 @@ module.exports = {
     Mutation: {
         createConversation: async (_, { users }, { auth }) => {
             if(!auth._id) throw new AuthError(401)
-            const newConversation = new Conversation({ users: users.concat(auth._id) })
-            return (await newConversation.save())
+            const allUsers = users.concat(auth._id)
+            const newConversation = new Conversation({ users: allUsers })
+            const conversation = await newConversation.save()
+            await User.updateMany({ _id: { $in: allUsers }}, {
+                $push: { conversations: conversation._id }
+            })
+            return conversation;
         },
         leaveConversation: async (_, { conversationId }, { auth }) => {
             if(!auth._id) throw new AuthError(401)
