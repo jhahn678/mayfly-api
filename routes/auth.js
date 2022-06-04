@@ -19,7 +19,7 @@ router.post('/login', async(req, res) => {
 
 router.post('/register', async(req, res) => {
     const { firstName, lastName, email, password } = req.body;
-    const registeredUser = await User.findOne({ email: email })
+    const registeredUser = await User.findOne({ 'account.email': email })
     if(registeredUser) throw new AppError('Email already in use', 400)
     const hash = await bcrypt.hash(password, 10)
     const newUser = new User({
