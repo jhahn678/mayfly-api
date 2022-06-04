@@ -5,8 +5,12 @@ const messageSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
+    conversation: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Conversation'
+    },
     body: String,
     media: [String]
 }, { timestamps: true })
 
-module.exports = messageSchema;
+module.exports = mongoose.model('Message', messageSchema);

@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const messageSchema = require('./message')
 
 const conversationSchema = new mongoose.Schema({
     users: [
@@ -8,8 +7,16 @@ const conversationSchema = new mongoose.Schema({
             ref: 'User'
         }
     ],
-    messages: [messageSchema],
-    latest_message: messageSchema,
+    messages: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Message'
+        }
+    ],
+    latest_message: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Message'
+    },
     avatar: String,
     media: [String]
 }, { timestamps: true })
