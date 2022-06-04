@@ -5,8 +5,8 @@ module.exports = typeDefs = gql `
         _id: ID!,
         details: UserDetails,
         account: UserAccount,
-        conversations: [ID],
-        friends: [ID],
+        conversations: [Conversation],
+        contacts: [User],
         createdAt: String,
         updatedAt: String   
     }
@@ -25,29 +25,33 @@ module.exports = typeDefs = gql `
 
     type Conversation {
         _id: ID!,
-        users: [ID],
-        messages: [ID],
+        users: [User],
+        messages: [Message],
         latest_message: Message,
         avatar: String
     }
 
     type Message {
         _id: ID!,
-        user: ID,
+        user: User!,
         body: String,
         media: [String]
         createdAt: String
     }
 
     type Query {
-        getUserConversations(userId: ID): [Conversation]
-        getConversationMessages(converstationId: ID): [Message]
         getUser(userId: ID): User
-        getAllUsers: [User]
+        getUsers: [User]
+        getConversation(conversationId: ID): Conversation
+        getConversations: [Conversation]
+        getMessage(messageId: ID): Message
     }
 
     type Mutation {
         createMessage(conversationId: ID, body: String): Message
         createConversation(users: [ID]): Conversation
+        leaveConversation(conversationId: ID): [Conversation]
+        addContact(userId: ID): [User]
+        removeContact(userId: ID): [User]
     }
 `
