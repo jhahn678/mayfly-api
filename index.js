@@ -20,16 +20,19 @@ async function startServer(){
         typeDefs, 
         resolvers,
         csrfPrevention: true,
-        context: ({ req }) => ({
-            auth: getAuthToken(req.headers.authorization)
-        })
+        context: async ({ req }) => {
+            const payload = await getAuthToken(req.headers.authorization)
+            return { auth: payload }
+        }
     })
     
     await server.start()
     server.applyMiddleware({ app, path: '/api'})
 
     const authRoutes = require('./routes/auth')
+    const devRoutes = require('./routes/dev')
 
+    app.use('/dev', devRoutes)
     app.use('/auth', authRoutes)
     app.use('/', (req, res) => {
         res.send('Mayfly API up and running')
