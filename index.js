@@ -5,6 +5,7 @@ const connectMongoDB = require('./config/mongodb')
 const { ApolloServer } = require('apollo-server-express')
 const typeDefs = require('./graphql/typeDefs')
 const resolvers = require('./graphql/resolvers/user')
+const getAuthToken = require('./utils/getAuthToken')
 
 require('dotenv').config();
 
@@ -18,7 +19,10 @@ async function startServer(){
     const server = new ApolloServer({ 
         typeDefs, 
         resolvers,
-        csrfPrevention: true
+        csrfPrevention: true,
+        context: ({ req }) => ({
+            auth: getAuthToken(req.headers.authorization)
+        })
     })
     
     await server.start()
