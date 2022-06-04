@@ -18,6 +18,7 @@ const conversationSchema = new mongoose.Schema({
         ref: 'Message'
     },
     avatar: String,
+    name: String,
     media: [String]
 }, { timestamps: true })
 
