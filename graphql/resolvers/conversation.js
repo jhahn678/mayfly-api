@@ -14,7 +14,12 @@ module.exports = {
     },
     Mutation: {
         createConversation: async (_, { users }, { auth }) => {
-            if(!auth._id) throw new AuthError(401)
+            if(!auth._id) throw new AuthError(401, 'Not authenticated')
+            const user = await User.findOne({ $and: [
+                { _id: auth._id},
+                { contacts: { $all: users }}
+            ]})
+            if(!user) throw new AuthError(400, 'Not all users are in your contacts')
             const allUsers = users.concat(auth._id)
             const newConversation = new Conversation({ users: allUsers })
             const conversation = await newConversation.save()

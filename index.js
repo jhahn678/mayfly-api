@@ -1,5 +1,5 @@
 const express = require('express')
-const PORT = process.env.PORT || 5001
+const PORT = process.env.PORT || 4000
 const cors = require('cors')
 const connectMongoDB = require('./config/mongodb')
 const { ApolloServer } = require('apollo-server-express')
