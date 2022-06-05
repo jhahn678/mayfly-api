@@ -37,6 +37,16 @@ async function startServer(){
     app.use('/', (req, res) => {
         res.send('Mayfly API up and running')
     })
+
+    app.use('*', (req, res) => {
+        res.status(404).json({ message: 'Resource does not exist' })
+    })
+
+    app.use('*', (err, req, res, next) => {
+        console.log(err)
+        res.status(err.status || 500).json({ message: err.message || 'Server Error'})
+    })
+
     app.listen(PORT, () => {
         console.log(`Server listening on port ${PORT}`)
     })

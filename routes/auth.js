@@ -3,24 +3,25 @@ const router = express.Router()
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
-const AppError = require('../utils/AppError')
+const AuthError = require('../utils/AuthError')
 const generateAuthToken = require('../utils/generateAuthToken')
+const catchAsync = require('../utils/catchAsync')
 
-router.post('/login', async(req, res) => {
+router.post('/login', catchAsync(async(req, res) => {
     const { email, password } = req.body;
-    const user = await User.findOne({ 'account.email': email })
-    if(await bcrypt.compare(password, user.account.password)){
+    const user = await User.findOne({ 'account.email': email.toLowerCase() })
+    if(user && (await bcrypt.compare(password, user.account.password))){
         const token = generateAuthToken({ _id: user._id})
-        return res.json({ token, message: 'Authentication successful' }).status(200)
+        return res.json({ token, user: user.details, message: 'Authentication successful' }).status(200)
     }else{
-        throw new AppError('Invalid credentials', 401)
+        throw new AuthError(401, 'Invalid credentials')
     }
-})
+}))
 
 router.post('/register', async(req, res) => {
     const { firstName, lastName, email, password } = req.body;
-    const registeredUser = await User.findOne({ 'account.email': email })
-    if(registeredUser) throw new AppError('Email already in use', 400)
+    const registeredUser = await User.findOne({ 'account.email': email.toLowerCase() })
+    if(registeredUser) throw new AuthError(400, 'Email already in use')
     const hash = await bcrypt.hash(password, 10)
     const newUser = new User({
         details: {
@@ -29,7 +30,7 @@ router.post('/register', async(req, res) => {
             fullName: `${firstName} ${lastName}`
         },
         account: {
-            email: email,
+            email: email.toLowerCase(),
             password: hash
         }
     })
