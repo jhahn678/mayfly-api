@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema({
             },
             status: {
                 type: String,
-                enum: ['Sent', 'Received']
+                enum: ['TO', 'FROM']
             },
             createdAt: Number
         }
