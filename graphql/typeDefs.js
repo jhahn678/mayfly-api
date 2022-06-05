@@ -8,7 +8,8 @@ module.exports = typeDefs = gql `
         conversations: [Conversation],
         contacts: [User],
         createdAt: String,
-        updatedAt: String   
+        updatedAt: String
+        pending_contacts: [PendingContact]
     }
 
     type UserDetails {
@@ -21,6 +22,17 @@ module.exports = typeDefs = gql `
         email: String,
         phone: Int,
         password: String
+    }
+
+    type PendingContact {
+        user: User!,
+        status: Status,
+        createdAt: Int!
+    }
+
+    enum Status {
+        TO
+        FROM
     }
 
     type Conversation {
@@ -55,6 +67,9 @@ module.exports = typeDefs = gql `
         createConversation(users: [ID]): Conversation
         leaveConversation(conversationId: ID): [Conversation]
         addContact(userId: ID): [User]
+        requestContact(userId: ID): [PendingContact]
+        acceptContact(userId: ID): [User]
+        denyContact(userId: ID): [PendingContact]
         removeContact(userId: ID): [User]
     }
 `
