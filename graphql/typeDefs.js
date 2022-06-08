@@ -150,10 +150,7 @@ module.exports = typeDefs = gql `
 
     type Mutation {
         updateUser(userId: ID, userInput: UserInput): User
-        createMessage(groupId: ID, body: String): Message
-        createMediaMessage(groupId: ID, body: String, media: MediaInput): Message
-        createCatchMessage(groupId: ID, catchId: ID): Message
-        createPlaceMessage(groupId: ID, placeId: ID): Message
+        createMessage(messageInput: MessageInput): Message
         createGroup(groupInput: GroupInput): Group
         updateGroup(groupUpdate: GroupUpdate): Group
         addUsersToGroup(users:[ID], groupId: ID): Group
@@ -169,6 +166,14 @@ module.exports = typeDefs = gql `
         createCatch(catchInput: CatchInput): Catch
         updateCatch(catchId: ID!, catchUpdate: CatchUpdate): Catch
         deleteCatch(catchId: ID!): [Catch]
+    }
+
+    input MessageInput {
+        group: ID,
+        body: String, 
+        media: [MediaInput], 
+        catch: ID, 
+        place: ID
     }
 
     
