@@ -9,17 +9,36 @@ const userSchema = new mongoose.Schema({
             type: String,
             unique: true
         },
-        avatar: String
+        avatar: String,
+        bio: String,
+        location: String,
     },
     account: {
-        email: String,
+        email: {
+            type: String,
+            unique: true
+        },
+        googleId: {
+            type: String,
+            unique: true
+        },
+        facebookId: {
+            type: String,
+            unique: true
+        },
         phone: Number,
         password: String
     },
-    conversations: [
+    groups: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Conversation'
+            ref: 'Group'
+        }
+    ],
+    contacts: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
         }
     ],
     pending_contacts: [
@@ -35,10 +54,16 @@ const userSchema = new mongoose.Schema({
             createdAt: Number
         }
     ],
-    contacts: [
+    places: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'User'
+            ref: 'Place'
+        }
+    ],
+    catches: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Catch'
         }
     ]
 }, { timestamps: true })

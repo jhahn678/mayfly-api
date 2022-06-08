@@ -5,9 +5,22 @@ const messageSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    conversation: {
+    group: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Conversation'
+        ref: 'Group'
+    },
+    place: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Place'
+    },
+    catch: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Catch'
+    },
+    type: {
+        type: String,
+        enum: ['TEXT', 'MEDIA', 'PLACE', 'CATCH'],
+        required: true
     },
     body: String,
     media: [String]

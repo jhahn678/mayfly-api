@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const conversationSchema = new mongoose.Schema({
+const groupSchema = new mongoose.Schema({
     users: [
         {
             type: mongoose.Schema.Types.ObjectId,
@@ -17,9 +17,21 @@ const conversationSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Message'
     },
+    places: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Place'
+        }
+    ],
+    catches: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Catch'
+        }
+    ],
     avatar: String,
     name: String,
     media: [String]
 }, { timestamps: true })
 
-module.exports = mongoose.model('Conversation', conversationSchema)
+module.exports = mongoose.model('Group', groupSchema)
