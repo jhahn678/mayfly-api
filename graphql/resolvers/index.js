@@ -1,19 +1,19 @@
 const userResolvers = require('./user')
-const conversationResolvers = require('./conversation')
+const groupResolvers = require('./group')
 const messageResolvers = require('./message')
 
 module.exports = {
     Query: {
         ...userResolvers.Query,
-        ...conversationResolvers.Query,
+        ...groupResolvers.Query,
         ...messageResolvers.Query
     },
     Mutation: {
         ...userResolvers.Mutation,
-        ...conversationResolvers.Mutation,
+        ...groupResolvers.Mutation,
         ...messageResolvers.Mutation
     },
     User: { ...userResolvers.User },
-    Conversation: { ...conversationResolvers.Conversation },
+    Group: { ...groupResolvers.Group },
     Message: { ...messageResolvers.Message }
 }

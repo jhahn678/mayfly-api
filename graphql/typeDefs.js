@@ -2,25 +2,33 @@ const { gql } = require('apollo-server-express')
 
 module.exports = typeDefs = gql `
     type User {
-        _id: ID!,
+        _id: ID,
         details: UserDetails,
         account: UserAccount,
-        conversations: [Conversation],
+        groups: [Group],
         contacts: [User],
+        pending_contacts: [PendingContact],
+        places: [Place],
+        catches: [Catch],
         createdAt: String,
         updatedAt: String
-        pending_contacts: [PendingContact]
     }
 
     type UserDetails {
         firstName: String,
         lastName: String,
-        fullName: String
+        fullName: String,
+        username: String,
+        avatar: Media,
+        bio: String,
+        location: String
     }
 
     type UserAccount {
         email: String,
         phone: Int,
+        googleId: ID,
+        facebookId: ID,
         password: String
     }
 
@@ -35,41 +43,200 @@ module.exports = typeDefs = gql `
         FROM
     }
 
-    type Conversation {
-        _id: ID!,
+
+
+    type Place {
+        _id: ID,
+        name: String,
+        description: String,
+        user: User,
+        publish_type: PublishType,
+        group: Group,
+        catches: [Catch],
+        location: Location,
+        media: [Media]
+        createdAt: String
+    }
+
+    type Location {
+        type: String,
+        coordinates: [Float]!
+    }
+
+    enum PublishType {
+        PUBLIC
+        SHARED
+        PRIVATE
+    }
+
+
+
+    type Catch {
+        _id: ID,
+        user: User,
+        place: Place,
+        species: String,
+        length: Length,
+        weight: Weight,
+        rig: String,
+        media: [Media]
+        createdAt: String,
+    }
+
+    type Length {
+        value: Float!,
+        unit: LengthUnit!
+    }
+    
+    enum LengthUnit{
+        IN
+        CM
+    }
+
+    type Weight {
+        value: Float!,
+        unit: WeightUnit!
+    }
+
+    enum WeightUnit {
+        LB
+        OZ
+        KG
+        G
+    }
+
+
+
+    type Group {
+        _id: ID,
         users: [User],
         messages: [Message],
         latest_message: Message,
+        places: [Place],
+        catches: [Catch]
         avatar: String,
         name: String,
-        media: [String]
+        media: [Media],
+        createdAt: String
     }
+
 
     type Message {
         _id: ID!,
         user: User!,
-        conversation: Conversation!
+        group: Group!
         body: String,
-        media: [String],
+        media: [Media],
         createdAt: String
     }
 
+    type Media {
+        id: ID!,
+        url: String
+    }
+
+
+
     type Query {
-        getUser(userId: ID): User
+        getUser(userId: ID!): User
         getUsers: [User]
-        getConversation(conversationId: ID): Conversation
-        getConversations: [Conversation]
-        getMessage(messageId: ID): Message
+        getGroup(groupId: ID!): Group
+        getGroups: [Group]
+        getMessage(messageId: ID!): Message
+        getPlace(placeID: ID!): Place
+        getPlaces: [Place]
+        getCatch(catchId: ID!): Catch
     }
 
     type Mutation {
-        createMessage(conversationId: ID, body: String): Message
-        createConversation(users: [ID]): Conversation
-        leaveConversation(conversationId: ID): [Conversation]
+        updateUser(userId: ID, userInput: UserInput): User
+        createMessage(groupId: ID, body: String): Message
+        createMediaMessage(groupId: ID, body: String, media: MediaInput): Message
+        createCatchMessage(groupId: ID, catchId: ID): Message
+        createPlaceMessage(groupId: ID, placeId: ID): Message
+        createGroup(groupInput: GroupInput): Group
+        updateGroup(groupUpdate: GroupUpdate): Group
+        addUsersToGroup(users:[ID], groupId: ID): Group
+        leaveGroup(groupId: ID): [Group]
         addContact(userId: ID): [User]
         requestContact(userId: ID): [PendingContact]
         acceptContact(userId: ID): [User]
         denyContact(userId: ID): [PendingContact]
         removeContact(userId: ID): [User]
+        createPlace(placeInput: PlaceInput): Place
+        updatePlace(placeId: ID!, placeUpdate: PlaceUpdate): Place
+        deletePlace(placeId: ID!): [Place]
+        createCatch(catchInput: CatchInput): Catch
+        updateCatch(catchId: ID!, catchUpdate: CatchUpdate): Catch
+        deleteCatch(catchId: ID!): [Catch]
+    }
+
+    
+    input GroupInput{
+        users: [ID],
+        name: String,
+        avatar: MediaInput
+    }
+
+    input GroupUpdate{
+        name: String,
+        avatar: MediaInput
+    }
+
+    
+    input UserInput{
+        firstName: String,
+        lastName: String,
+        bio: String,
+        location: String,
+        avatar: MediaInput
+    }
+
+    input PlaceInput{
+        name: String!, 
+        publish_type: PublishType!, 
+        coordinates: [Float]!, 
+        description: String, 
+        group: ID
+    }
+
+    input PlaceUpdate{
+        name: String,
+        description: String,
+        coordinates: [Float]!
+    }
+
+    input CatchInput{
+        place: ID!, 
+        species: String!, 
+        group: ID,
+        length: LengthInput, 
+        weight: WeightInput, 
+        rig: String, 
+        media: [MediaInput]
+    }
+
+    input CatchUpdate{
+        group: ID,
+        species: String,
+        length: LengthInput,
+        weight: WeightInput,
+        rig: String,
+        media: [MediaInput]
+    }
+
+    input MediaInput {
+        id: ID!,
+        url: String
+    }
+
+    input LengthInput{
+        value: Float!,
+        unit: LengthUnit!
+    }
+
+    input WeightInput{
+        value: Float!,
+        unit: WeightUnit!
     }
 `

@@ -1,5 +1,7 @@
 const User = require('../../models/user')
-const Conversation = require('../../models/conversation')
+const Group = require('../../models/group')
+const Catch = require('../../models/catch')
+const Place = require('../../models/place')
 const AppError = require('../../utils/AppError')
 const AuthError = require('../../utils/AuthError')
 
@@ -73,11 +75,17 @@ module.exports = {
         }
     },
     User: {
-        conversations: async ({ conversations }) => {
-            return (await Conversation.find({ _id: { $in: conversations }}))
+        groups: async ({ groups }) => {
+            return (await Group.find({ _id: { $in: groups }}))
         },
         contacts: async ({ contacts }) => {
             return (await User.find({ _id: { $in: contacts }}))
+        },
+        catches: async ({ catches }) => {
+            return (await Catch.find({ _id: { $in: catches }}))
+        },
+        places: async ({ places }) => {
+            return (await Place.find({ _id: { $in: places }}))
         }
     }
 }

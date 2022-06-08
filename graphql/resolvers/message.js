@@ -1,5 +1,5 @@
 const User = require('../../models/user')
-const Conversation = require('../../models/conversation')
+const Group = require('../../models/group')
 const Message = require('../../models/message')
 const AuthError = require('../../utils/AuthError')
 
@@ -10,11 +10,11 @@ module.exports = {
         }
     },
     Mutation: {
-        createMessage: async (_, { conversationId, body }, { auth }) => {
+        createMessage: async (_, { groupId, body }, { auth }) => {
             if(!auth._id) throw new AuthError(401)
-            const newMessage = new Message({ user: auth._id, conversation: conversationId, body})
+            const newMessage = new Message({ user: auth._id, group: groupId, body})
             const message = await newMessage.save()
-            await Conversation.findByIdAndUpdate(conversationId, { 
+            await Group.findByIdAndUpdate(groupId, { 
                 $push: { messages: message._id },
                 $set: { latest_message: message._id }
             })
@@ -25,8 +25,8 @@ module.exports = {
         user: async ({ user }) => {
             return (await User.findById(user))
         },
-        conversation: async ({ conversation }) => {
-            return (await Conversation.findById(conversation))
+        group: async ({ group }) => {
+            return (await Group.findById(group))
         }
     }
 }
