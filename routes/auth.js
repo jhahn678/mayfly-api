@@ -12,7 +12,11 @@ router.post('/login', catchAsync(async(req, res) => {
     const user = await User.findOne({ 'account.email': email.toLowerCase() })
     if(user && (await bcrypt.compare(password, user.account.password))){
         const token = generateAuthToken({ _id: user._id})
-        return res.json({ token, user: user.details, message: 'Authentication successful' }).status(200)
+        return res.status(200).json({ 
+            token, 
+            user: { ...user.details, _id: user._id },
+            message: 'Authentication successful' 
+        })
     }else{
         throw new AuthError(401, 'Invalid credentials')
     }
