@@ -213,7 +213,8 @@ module.exports = typeDefs = gql `
     }
 
     input CatchInput{
-        place: ID!, 
+        place: ID, 
+        groupId: ID,
         species: String!, 
         group: ID,
         length: LengthInput, 
@@ -223,7 +224,7 @@ module.exports = typeDefs = gql `
     }
 
     input CatchUpdate{
-        group: ID,
+        place: ID,
         species: String,
         length: LengthInput,
         weight: WeightInput,

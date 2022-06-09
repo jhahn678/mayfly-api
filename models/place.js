@@ -15,10 +15,12 @@ const placeSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Group'
     },
-    catches: {
+    catches: [
+      {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Catch'
-    },
+      }
+    ],
     location: {
       type: {
         type: String,

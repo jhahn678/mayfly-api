@@ -1,5 +1,6 @@
 const User = require('../../models/user')
 const Catch = require('../../models/catch')
+const Group = require('../../models/group')
 const Place = require('../../models/place')
 const AppError = require('../../utils/AppError')
 const AuthError = require('../../utils/AuthError')
@@ -23,14 +24,29 @@ module.exports = {
             const user = await User.findByIdAndUpdate(auth._id, {
                 $push: { catches: savedCatch._id } 
             }, { new: true })
-            if(catchInput.place) await Places.findByIdAndUpdate(catchInput.place, {
+            if(catchInput.place) ( await Place.findByIdAndUpdate(catchInput.place, {
                 $push: { catches: savedCatch._id }
-            })
+            }))
+            if(catchInput.group) ( await Group.findByIdAndUpdate(catchInput.group, {
+                $push: { catches: savedCatch._id}
+            }))
             return user.catches;
         },
         updateCatch: async (_, { catchId, catchUpdate}, { auth }) => {
             if(!auth._id) throw new AuthError(401, 'Not authenticated')
-            const updatedCatch = await Catch.findByOneAndUpdate({ $and : [
+            const catchDoc = await Catch.findById(catchId)
+            if(catchDoc.user.toString() !== auth._id) throw new AuthError(403, 'Not authorized')
+            if(catchUpdate?.place !== undefined){
+                if(catchDoc.place){
+                    await Place.findByIdAndUpdate(catchDoc.place, {
+                        $pull: { catches: catchId }
+                    })
+                }
+                await Place.findByIdAndUpdate(catchUpdate.place, {
+                    $push: { catches: catchId }
+                })
+            }
+            const updatedCatch = await Catch.findOneAndUpdate({ $and : [
                 { _id: catchId }, { user: auth._id }
             ]}, {
                 $set: { ...catchUpdate }
@@ -40,13 +56,16 @@ module.exports = {
         deleteCatch: async (_, { catchId }, { auth }) => {
             if(!auth._id) throw new AuthError(401, 'Not authenticated')
             const catchDoc = await Catch.findById(catchId)
-            if(auth._id !== catchDoc.user) throw new AuthError(403, 'Not authorized')
+            if(auth._id !== catchDoc.user.toString()) throw new AuthError(403, 'Not authorized')
             const user = await User.findByIdAndUpdate(auth._id, {
                 $pull: { catches: catchId }
             }, { new: true })
-            const place = await Place.findByIdAndUpdate(catchDoc.place, {
+            await Place.findByIdAndUpdate(catchDoc.place, {
                 $pull: { catches: catchId }
             })
+            await Group.findOneAndUpdate({ catches: catchId }, {
+                $pull: { catches: catchId }
+            }) 
             return user.catches;
         }
     },
