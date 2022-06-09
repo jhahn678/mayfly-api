@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "dev": "nodemon index.js"
   },
   "author": "",
@@ -20,5 +20,9 @@
     "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.3.3"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^7.2.0",
+    "jest": "^28.1.1"
   }
 }
