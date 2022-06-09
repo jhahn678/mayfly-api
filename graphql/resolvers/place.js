@@ -7,6 +7,7 @@ const AuthError = require('../../utils/AuthError')
 module.exports = {
     Query: {
         getPlace: async (_, { placeId } ) => {
+            console.log(placeId)
             return (await Place.findById(placeId))
         },
         getPlaces: async () => {
@@ -48,13 +49,14 @@ module.exports = {
         deletePlace: async (_, { placeId }, { auth }) => {
             if(!auth._id) throw new AuthError(401, 'Not authenticated')
             const place = await Place.findById(placeId)
-            if(place.user !== auth._id) throw new AuthError(403, 'Not authorized')
+            if(place.user.toString() !== auth._id) throw new AuthError(403, 'Not authorized')
             const user = await User.findByIdAndUpdate(auth._id, {
                 $pull: { places: placeId }
             }, { new: true })
-            if(place.group) (await Group.findByIdAndUpdate(place.group, {
-                $pull: { places: placeId }
-            }))
+            if(place.group){
+                await Group.findByIdAndUpdate(place.group, {
+                    $pull: { places: placeId }
+            })}
             await Place.findByIdAndDelete(placeId)
             return user.places;
         }

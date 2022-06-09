@@ -35,7 +35,7 @@ module.exports = typeDefs = gql `
     type PendingContact {
         user: User!,
         status: Status,
-        createdAt: Int!
+        createdAt: Float!
     }
 
     enum Status {
@@ -114,7 +114,7 @@ module.exports = typeDefs = gql `
         latest_message: Message,
         places: [Place],
         catches: [Catch]
-        avatar: String,
+        avatar: Media,
         name: String,
         media: [Media],
         createdAt: String
@@ -143,20 +143,21 @@ module.exports = typeDefs = gql `
         getGroup(groupId: ID!): Group
         getGroups: [Group]
         getMessage(messageId: ID!): Message
-        getPlace(placeID: ID!): Place
+        getPlace(placeId: ID!): Place
         getPlaces: [Place]
         getCatch(catchId: ID!): Catch
     }
 
     type Mutation {
-        updateUser(userId: ID, userInput: UserInput): User
+        updateUser(userUpdate: UserUpdate): User
         createMessage(messageInput: MessageInput): Message
         createGroup(groupInput: GroupInput): Group
-        updateGroup(groupUpdate: GroupUpdate): Group
+        updateGroup(groupId: ID!, groupUpdate: GroupUpdate): Group
         addUsersToGroup(users:[ID], groupId: ID): Group
         leaveGroup(groupId: ID): [Group]
         addContact(userId: ID): [User]
         requestContact(userId: ID): [PendingContact]
+        cancelRequestContact(userId: ID): [PendingContact]
         acceptContact(userId: ID): [User]
         denyContact(userId: ID): [PendingContact]
         removeContact(userId: ID): [User]
@@ -189,7 +190,7 @@ module.exports = typeDefs = gql `
     }
 
     
-    input UserInput{
+    input UserUpdate{
         firstName: String,
         lastName: String,
         bio: String,
@@ -208,7 +209,7 @@ module.exports = typeDefs = gql `
     input PlaceUpdate{
         name: String,
         description: String,
-        coordinates: [Float]!
+        coordinates: [Float]
     }
 
     input CatchInput{

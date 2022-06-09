@@ -2,14 +2,15 @@ const User = require('../../models/user')
 const Message = require('../../models/message')
 const Group = require('../../models/group')
 const Catch = require('../../models/catch')
+const Place = require('../../models/place')
 const AuthError = require('../../utils/AuthError')
 const AppError = require('../../utils/AppError')
 
 
 module.exports = {
     Query: {
-        getGroup: async (groupId) => {
-            const group = await Group.findOne({ _id: groupId})
+        getGroup: async (_, { groupId }) => {
+            const group = await Group.findById(groupId)
             if(!group) throw new AppError('Resource not found', 400)
             return group;
         },
@@ -43,6 +44,15 @@ module.exports = {
             if(!user.groups.find(groupId)) throw new AuthError(403, 'Not authorized')
             const group = await Group.findByIdAndUpdate(groupId, {
                 $addToSet: { users: { $each: users } }
+            }, { new: true })
+            return group;
+        },
+        updateGroup: async (_, { groupId, groupUpdate }, { auth }) => {
+            if(!auth._id) throw new AuthError(401, 'Not authenticated')
+            const user = await User.findById(auth._id)
+            if(!user.groups.includes(groupId)) throw new AuthError(403, 'Not authorized')
+            const group = await Group.findByIdAndUpdate(groupId, {
+                $set: { ...groupUpdate }
             }, { new: true })
             return group;
         },

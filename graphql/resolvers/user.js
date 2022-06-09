@@ -18,7 +18,20 @@ module.exports = {
         }
     },
     Mutation: {
-        addContact: async (_, { userId}, { auth }) => {
+        updateUser: async (_, { userUpdate }, { auth }) => {
+            if(!auth._id) throw new AuthError(401, 'Not authenticated')
+            const user = await User.findByIdAndUpdate(auth._id, {
+                $set: { 
+                    'details.firstName': userUpdate?.firstName,
+                    'details.lastName': userUpdate?.lastName,
+                    'details.bio': userUpdate?.bio,
+                    'details.location': userUpdate?.location,
+                    'details.avatar': userUpdate?.avatar
+                }
+            }, { new: true })
+            return user;
+        },
+        addContact: async (_, { userId }, { auth }) => {
             if(!auth._id) throw new AuthError(401)
             const user = await User.findByIdAndUpdate(auth._id, {
                 $push: { contacts: userId }
@@ -35,9 +48,19 @@ module.exports = {
             })
             const user = await User.findOneAndUpdate({ $and: [
                 { _id: auth._id },
-                { 'pending_contacts.user': { $ne: auth._id } }
+                { 'pending_contacts.user': { $ne: userId } }
             ]},{
                 $push: { pending_contacts: { user: userId, status: 'TO', createdAt: Date.now() }}
+            }, { new: true })
+            return user.pending_contacts;
+        },
+        cancelRequestContact: async (_, { userId }, { auth }) => {
+            if(!auth._id) throw new AuthError(401)
+            await User.findByIdAndUpdate(userId, {
+                $pull: { pending_contacts: { user: auth._id, status: 'FROM' }}
+            }, { new: true })
+            const user = await User.findByIdAndUpdate(auth._id, {
+                $pull: { pending_contacts: { user: userId, status: 'TO' }}
             }, { new: true })
             return user.pending_contacts
         },
