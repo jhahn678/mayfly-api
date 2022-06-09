@@ -29,9 +29,12 @@ const groupSchema = new mongoose.Schema({
             ref: 'Catch'
         }
     ],
-    avatar: String,
+    avatar: {
+        id: String,
+        url: String
+    },
     name: String,
-    media: [String]
+    media: [{ id: String, url: String }]
 }, { timestamps: true })
 
 module.exports = mongoose.model('Group', groupSchema)

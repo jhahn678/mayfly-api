@@ -29,7 +29,8 @@ const placeSchema = new mongoose.Schema({
         type: [Number],
         required: true
       }
-    }
+    },
+    media: [{ id: String, url: String }]
 }, { timestamps: true });
 
 module.exports = mongoose.model('Place', placeSchema)

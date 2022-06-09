@@ -23,7 +23,7 @@ const messageSchema = new mongoose.Schema({
         required: true
     },
     body: String,
-    media: [String]
+    media: [{ id: String, url: String }]
 }, { timestamps: true })
 
 module.exports = mongoose.model('Message', messageSchema);

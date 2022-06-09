@@ -25,7 +25,7 @@ const catchSchema = new mongoose.Schema({
         }
     },
     rig: String,
-    media: [String]
+    media: [{ id: String, url: String }]
 }, { timestamps: true })
 
 module.exports = mongoose.model('Catch', catchSchema)

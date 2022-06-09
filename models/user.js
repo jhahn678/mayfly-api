@@ -9,22 +9,28 @@ const userSchema = new mongoose.Schema({
             type: String,
             unique: true
         },
-        avatar: String,
+        avatar: { 
+            id: String, 
+            url: String 
+        },
         bio: String,
         location: String,
     },
     account: {
         email: {
             type: String,
-            unique: true
+            unique: true,
+            sparse: true
         },
         googleId: {
             type: String,
-            unique: true
+            unique: true,
+            sparse: true
         },
         facebookId: {
             type: String,
-            unique: true
+            unique: true,
+            sparse: true
         },
         phone: Number,
         password: String
@@ -67,5 +73,6 @@ const userSchema = new mongoose.Schema({
         }
     ]
 }, { timestamps: true })
+
 
 module.exports = mongoose.model('User', userSchema)
