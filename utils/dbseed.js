@@ -13,14 +13,17 @@ module.exports = async () => {
     await Catch.deleteMany({})
 
     for(let i = 0; i < 20; i++){
+        const fakeFirstName = faker.name.firstName()
+        const fakeLastName = faker.name.lastName()
         const user = new User({
             details: {
-                firstName: faker.name.firstName(),
-                lastName: faker.name.lastName(),
-                username: faker.internet.userName(),
+                firstName: fakeFirstName,
+                lastName: fakeLastName,
+                fullName: `${fakeFirstName} ${fakeLastName}`,
+                username: faker.datatype.uuid(),
             },
             account: {
-                email: faker.internet.email(),
+                email: faker.unique(faker.internet.email)
             }
         })
         await user.save()

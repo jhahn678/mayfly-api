@@ -1,22 +1,18 @@
-const connectMongoDB = require('../../../config/mongodb')
+const connectMongoDB = require('../../config/mongodb')
 const mongoose = require('mongoose')
-const User = require('../../../models/user')
-const Catch = require('../../../models/catch')
-const Group = require('../../../models/group')
-const Place = require('../../../models/place')
-const dbseed = require('../../../utils/dbseed')
-const catchResolver = require('../catch')
+const User = require('../../models/user')
+const Catch = require('../../models/catch')
+const Group = require('../../models/group')
+const Place = require('../../models/place')
+const catchResolver = require('../../graphql/resolvers/catch')
 
-jest.setTimeout(10000)
+jest.setTimeout(20000)
 
-
-beforeAll( async () => {
-    require('dotenv').config();
+beforeAll(async() => {
     await connectMongoDB()
-    await dbseed()
 })
 
-afterAll(async () => {
+afterAll(async() => {
     await mongoose.disconnect()
 })
 
