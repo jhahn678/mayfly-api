@@ -49,6 +49,7 @@ module.exports = typeDefs = gql `
         _id: ID,
         name: String,
         description: String,
+        avatar: Media,
         user: User,
         publish_type: PublishType,
         group: Group,
@@ -124,7 +125,10 @@ module.exports = typeDefs = gql `
     type Message {
         _id: ID!,
         user: User!,
-        group: Group!
+        group: Group!,
+        place: Place,
+        catch: Catch,
+        type: MessageType,
         body: String,
         media: [Media],
         createdAt: String
@@ -135,6 +139,12 @@ module.exports = typeDefs = gql `
         url: String
     }
 
+    enum MessageType {
+        TEXT
+        MEDIA
+        PLACE
+        CATCH
+    }
 
 
     type Query {
@@ -170,11 +180,12 @@ module.exports = typeDefs = gql `
     }
 
     input MessageInput {
-        group: ID,
+        group: ID!,
         body: String, 
         media: [MediaInput], 
         catch: ID, 
-        place: ID
+        place: ID,
+        type: MessageType!
     }
 
     
@@ -203,13 +214,15 @@ module.exports = typeDefs = gql `
         publish_type: PublishType!, 
         coordinates: [Float]!, 
         description: String, 
+        avatar: MediaInput,
         group: ID
     }
 
     input PlaceUpdate{
         name: String,
         description: String,
-        coordinates: [Float]
+        coordinates: [Float],
+        avatar: MediaInput
     }
 
     input CatchInput{

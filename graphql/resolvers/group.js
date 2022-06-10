@@ -21,11 +21,13 @@ module.exports = {
     Mutation: {
         createGroup: async (_, { groupInput }, { auth }) => {
             if(!auth._id) throw new AuthError(401, 'Not authenticated')
-            const user = await User.findOne({ $and: [
-                { _id: auth._id},
-                { contacts: { $all: groupInput.users }}
-            ]})
-            if(!user) throw new AuthError(400, 'Not all users are in your contacts')
+            if(groupInput.users.length > 0){
+                const user = await User.findOne({ $and: [
+                    { _id: auth._id},
+                    { contacts: { $all: groupInput.users }}
+                ]})
+                if(!user) throw new AuthError(400, 'Not all users are in your contacts')
+            }
             const allUsers = groupInput.users.concat(auth._id)
             const newGroup = new Group({ 
                 users: allUsers,
@@ -41,10 +43,14 @@ module.exports = {
         addUsersToGroup: async (_, { users, groupId }, { auth }) => {
             if(!auth._id) throw new AuthError(401, 'Not authenticated')
             const user = await User.findById(auth._id)
-            if(!user.groups.find(groupId)) throw new AuthError(403, 'Not authorized')
+            if(!user.groups.includes(groupId)) throw new AuthError(403, 'Not authorized')
             const group = await Group.findByIdAndUpdate(groupId, {
                 $addToSet: { users: { $each: users } }
             }, { new: true })
+            await User.updateMany({ $and: [
+                { _id: { $in: users }},
+                { groups: { $ne: group._id }}
+            ]}, { $push: { groups: group._id } })
             return group;
         },
         updateGroup: async (_, { groupId, groupUpdate }, { auth }) => {
@@ -66,7 +72,7 @@ module.exports = {
             }, { new: true })
             if(group.users.length === 0){
                 const group = await Group.findByIdAndDelete(groupId)
-                await Messages.deleteMany({ _id: { $in: group.messages }})
+                await Message.deleteMany({ _id: { $in: group.messages }})
                 await Place.updateMany({ _id: { $in: group.places }}, {
                     $set: { publish_type: 'PRIVATE', group: null }
                 })

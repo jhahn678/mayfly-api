@@ -10,19 +10,20 @@ module.exports = {
         }
     },
     Mutation: {
-        createMessage: async (_, { groupInput }, { auth }) => {
+        createMessage: async (_, { messageInput }, { auth }) => {
             if(!auth._id) throw new AuthError(401)
             const newMessage = new Message({ 
                 user: auth._id, 
-                group: groupInput.group, 
-                body: groupInput.body,
-                media: groupInput.media,
-                catch: groupInput.catch,
-                place: groupInput.place
+                group: messageInput.group, 
+                body: messageInput.body,
+                media: messageInput.media,
+                catch: messageInput.catch,
+                place: messageInput.place,
+                type: messageInput.type
             })
             const message = await newMessage.save()
             await Group.findOneAndUpdate({ $and: [
-                { _id: groupId }, { users: auth._id }
+                { _id: messageInput.group }, { users: auth._id }
             ]}, { 
                 $push: { messages: message._id },
                 $set: { latest_message: message._id }

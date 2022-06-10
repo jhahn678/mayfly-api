@@ -20,7 +20,7 @@ module.exports = {
     Mutation: {
         updateUser: async (_, { userUpdate }, { auth }) => {
             if(!auth._id) throw new AuthError(401, 'Not authenticated')
-            const user = await User.findByIdAndUpdate(auth._id, {
+            let user = await User.findByIdAndUpdate(auth._id, {
                 $set: { 
                     'details.firstName': userUpdate?.firstName,
                     'details.lastName': userUpdate?.lastName,
@@ -29,6 +29,11 @@ module.exports = {
                     'details.avatar': userUpdate?.avatar
                 }
             }, { new: true })
+            if(userUpdate?.firstName || userUpdate?.lastName){
+                user = await User.findByIdAndUpdate(auth._id, {
+                    $set: { 'details.fullName': `${user.details.firstName} ${user.details.lastName}` }
+                }, { new: true })
+            }
             return user;
         },
         addContact: async (_, { userId }, { auth }) => {
@@ -52,6 +57,7 @@ module.exports = {
             ]},{
                 $push: { pending_contacts: { user: userId, status: 'TO', createdAt: Date.now() }}
             }, { new: true })
+            if(!user) throw new AppError(400, 'User is already in your contacts')
             return user.pending_contacts;
         },
         cancelRequestContact: async (_, { userId }, { auth }) => {
@@ -94,6 +100,9 @@ module.exports = {
             const user = await User.findByIdAndUpdate(auth._id, {
                 $pull: { contacts: userId }
             }, { new: true })
+            await User.findByIdAndUpdate(userId, {
+                $pull: { contacts: auth._id }
+            })
             return user.contacts;
         }
     },

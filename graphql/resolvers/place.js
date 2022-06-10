@@ -20,6 +20,7 @@ module.exports = {
             const newPlace = new Place({
                 name: placeInput.name,
                 description: placeInput.description,
+                avatar: placeInput.avatar,
                 user: auth._id,
                 publish_type: placeInput.publish_type,
                 group: placeInput.group,
@@ -40,7 +41,7 @@ module.exports = {
         updatePlace: async (_, { placeId, placeUpdate }, { auth }) => {
             if(!auth._id) throw new AuthError(401, 'Not authenticated')
             const place = await Place.findById(placeId)
-            if(place.user !== auth._id) throw new AuthError(403, 'Not authorized')
+            if(place.user.valueOf() !== auth._id.valueOf()) throw new AuthError(403, 'Not authorized')
             const placeUpdated = await Place.findByIdAndUpdate(placeId, {
                 $set: { ...placeUpdate }
             }, { new: true })
