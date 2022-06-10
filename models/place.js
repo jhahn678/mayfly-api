@@ -3,6 +3,10 @@ const mongoose = require('mongoose')
 const placeSchema = new mongoose.Schema({
     name: String,
     description: String,
+    avatar: { 
+      id: String, 
+      url: String 
+    },
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
