@@ -47,13 +47,15 @@ router.post('/register', async(req, res) => {
 router.get('/username', async(req, res) => {
     const { value } = req.query
     const user = await User.findOne({ 'details.username': value })
-    if(user) res.status(400).json({ message: 'Username already in use' })
+    if(user) return res.status(400).json({ message: 'Username already in use' })
+    res.status(200).json({ message: 'Username Available'})
 })
 
 router.get('/email', async(req, res) => {
     const { value } = req.query;
     const user = await User.findOne({ 'account.email': value })
-    if(user) res.status(400).json({ message: 'Email already in use' })
+    if(user) return res.status(400).json({ message: 'Email already in use' })
+    res.status(200).json({ message: 'Email Available'})
 })
 
 module.exports = router;
