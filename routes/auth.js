@@ -22,7 +22,7 @@ router.post('/login', catchAsync(async(req, res) => {
     }
 }))
 
-router.post('/register', async(req, res) => {
+router.post('/register', catchAsync(async(req, res) => {
     const { firstName, lastName, email, username, password } = req.body;
     const registeredUser = await User.findOne({ 'account.email': email.toLowerCase() })
     if(registeredUser) throw new AuthError(400, 'Email already in use')
@@ -42,20 +42,20 @@ router.post('/register', async(req, res) => {
     const user = await newUser.save()
     const token = generateAuthToken({ _id: user._id })
     res.json({ user, token, message: 'User created successfully' }).status(200)
-})
+}))
 
-router.get('/username', async(req, res) => {
+router.get('/username', catchAsync(async(req, res) => {
     const { value } = req.query
     const user = await User.findOne({ 'details.username': value })
     if(user) return res.status(400).json({ message: 'Username already in use' })
     res.status(200).json({ message: 'Username Available'})
-})
+}))
 
-router.get('/email', async(req, res) => {
+router.get('/email', catchAsync(async(req, res) => {
     const { value } = req.query;
     const user = await User.findOne({ 'account.email': value })
     if(user) return res.status(400).json({ message: 'Email already in use' })
     res.status(200).json({ message: 'Email Available'})
-})
+}))
 
 module.exports = router;
