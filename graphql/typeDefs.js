@@ -118,7 +118,8 @@ module.exports = typeDefs = gql `
         avatar: Media,
         name: String,
         media: [Media],
-        createdAt: String
+        createdAt: String,
+        created_by: User!
     }
 
 
@@ -192,7 +193,8 @@ module.exports = typeDefs = gql `
     input GroupInput{
         users: [ID],
         name: String,
-        avatar: MediaInput
+        avatar: MediaInput,
+        created_by: ID!
     }
 
     input GroupUpdate{

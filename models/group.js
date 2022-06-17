@@ -34,7 +34,11 @@ const groupSchema = new mongoose.Schema({
         url: String
     },
     name: String,
-    media: [{ id: String, url: String }]
+    media: [{ id: String, url: String }],
+    created_by: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }
 }, { timestamps: true })
 
 module.exports = mongoose.model('Group', groupSchema)

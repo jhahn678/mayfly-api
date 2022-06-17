@@ -32,7 +32,8 @@ module.exports = {
             const newGroup = new Group({ 
                 users: allUsers,
                 name: groupInput.name,
-                avatar: groupInput.avatar
+                avatar: groupInput.avatar,
+                created_by: auth._id
             })
             const group = await newGroup.save()
             await User.updateMany({ _id: { $in: allUsers }}, {

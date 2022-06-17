@@ -33,7 +33,8 @@ module.exports = async () => {
 
     const newGroup = new Group({
         users: users.map(u => u._id),
-        name: 'Test group'
+        name: 'Test group',
+        created_by: users[0]._id
     })
 
     const group = await newGroup.save()
