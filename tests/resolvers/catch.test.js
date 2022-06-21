@@ -21,19 +21,19 @@ test('Adding a catch to a place', async function(){
     const place = await Place.findOne({})
     const user = await User.findOne({})
 
-    const catchInput = { place: place._id, species: 'Northern Pike' }
+    const catchInput = { place: place._id, species: 'Northern Pike', publish_type: 'PUBLIC' }
     const auth = { _id: user._id.toString() }
 
     const result = await catchResolver.Mutation.createCatch({}, { catchInput }, { auth })
     expect(result.length).toBe(user.catches.length + 1)
 
-    const expected = expect.objectContaining({ place: place._id, species: 'Northern Pike' })
+    const expected = expect.objectContaining({ place: place._id, species: 'Northern Pike', publish_type: 'PUBLIC' })
 
     const populatedUser = await User.findById(user._id).populate('catches').select('catches')
     expect(populatedUser.catches).toEqual(expect.arrayContaining([expected]))
 
     const populatedPlace = await Place.findById(place._id).populate('catches')
-    const expectedCatch = expect.objectContaining({ user: user._id, species: 'Northern Pike' })
+    const expectedCatch = expect.objectContaining({ user: user._id, species: 'Northern Pike', publish_type: 'PUBLIC'})
     expect(populatedPlace.catches).toEqual(expect.arrayContaining([ expectedCatch ]))
 })
 
@@ -44,7 +44,7 @@ test('Unlinking place from catch', async function(){
     const place = await Place.findOne({})
 
     const auth = { _id: user._id.toString() }
-    const catchInput = { place: place._id, species: 'Northern Pike' }
+    const catchInput = { place: place._id, species: 'MUSKY', publish_type: 'PUBLIC'}
 
     const userCatches = await catchResolver.Mutation.createCatch({}, { catchInput }, { auth })
     const catchId = userCatches.find(id => !user.catches.includes(id) )
@@ -67,7 +67,7 @@ test('Adding a catch to a group and place', async function(){
     const group = await Group.findById(user.groups[0])
 
     const auth = { _id: user._id.toString() }
-    const catchInput = { place: place._id, group: group._id, species: 'Northern Pike' }
+    const catchInput = { place: place._id, group: group._id, species: 'Northern SUCKER', publish_type: 'PRIVATE' }
 
     const userCatches = await catchResolver.Mutation.createCatch({}, { catchInput }, { auth })
 
