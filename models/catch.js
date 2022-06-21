@@ -9,6 +9,11 @@ const catchSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Place'
     },
+    publish_type: {
+        type: String,
+        enum: ['PUBLIC', 'SHARED', 'PRIVATE']
+    },
+    title: String,
     species: String,
     length: {
         value: Number,

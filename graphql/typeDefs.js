@@ -76,6 +76,8 @@ module.exports = typeDefs = gql `
         _id: ID,
         user: User,
         place: Place,
+        publish_type: PublishType,
+        title: String,
         species: String,
         length: Length,
         weight: Weight,
@@ -228,8 +230,9 @@ module.exports = typeDefs = gql `
     }
 
     input CatchInput{
+        title: String,
         place: ID, 
-        groupId: ID,
+        publish_type: PublishType!,
         species: String!, 
         group: ID,
         length: LengthInput, 
@@ -240,6 +243,7 @@ module.exports = typeDefs = gql `
 
     input CatchUpdate{
         place: ID,
+        title: String,
         species: String,
         length: LengthInput,
         weight: WeightInput,
