@@ -25,7 +25,7 @@ module.exports = {
                     latitude: placeInput.coordinates[1],
                     longitude: placeInput.coordinates[0]
                 },
-                result_type: 'administrative_area_level_2'
+                result_type: 'administrative_area_level_2|locality|sublocality'
             }})
             const newPlace = new Place({
                 name: placeInput.name,
@@ -34,7 +34,7 @@ module.exports = {
                 user: auth._id,
                 publish_type: placeInput.publish_type,
                 group: placeInput.group,
-                locality: data.results[0].formatted_address,
+                locality: data.results[0]?.formatted_address || null,
                 location: {
                     type: 'Point',
                     coordinates: placeInput.coordinates
