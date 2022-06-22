@@ -54,6 +54,7 @@ module.exports = typeDefs = gql `
         publish_type: PublishType!,
         group: Group,
         catches: [Catch],
+        locality: String,
         location: Location,
         media: [Media]
         createdAt: String

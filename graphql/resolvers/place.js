@@ -3,6 +3,7 @@ const Catch = require('../../models/catch')
 const Place = require('../../models/place')
 const Group = require('../../models/group')
 const AuthError = require('../../utils/AuthError')
+const { Client } = require('@googlemaps/google-maps-services-js')
 
 module.exports = {
     Query: {
@@ -17,6 +18,15 @@ module.exports = {
     Mutation: {
         createPlace: async (_, { placeInput }, { auth }) => {
             if(!auth._id) throw new AuthError(401, 'Not authenticated')
+            const client = new Client({})
+            const { data } = await client.reverseGeocode({ params: {
+                key: process.env.GOOGLE_API_KEY,
+                latlng: { 
+                    latitude: placeInput.coordinates[1],
+                    longitude: placeInput.coordinates[0]
+                },
+                result_type: 'administrative_area_level_2'
+            }})
             const newPlace = new Place({
                 name: placeInput.name,
                 description: placeInput.description,
@@ -24,6 +34,7 @@ module.exports = {
                 user: auth._id,
                 publish_type: placeInput.publish_type,
                 group: placeInput.group,
+                locality: data.results[0].formatted_address,
                 location: {
                     type: 'Point',
                     coordinates: placeInput.coordinates
