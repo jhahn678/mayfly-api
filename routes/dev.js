@@ -8,6 +8,7 @@ const Catch = require('../models/catch')
 const { faker } = require('@faker-js/faker')
 const generateAuthToken = require('../utils/generateAuthToken')
 const dbseed = require('../utils/dbseed')
+const {Client} = require('@googlemaps/google-maps-services-js')
 
 router.get('/', async (req, res) => {
     const users = await User.updateMany({}, {
@@ -39,3 +40,4 @@ router.post('/seed', async(req, res) => {
 
 
 module.exports = router;
+
