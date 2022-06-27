@@ -233,6 +233,7 @@ module.exports = typeDefs = gql `
     input CatchInput{
         title: String,
         place: ID, 
+        location: LocationInput,
         publish_type: PublishType!,
         species: String!, 
         group: ID,
@@ -244,6 +245,7 @@ module.exports = typeDefs = gql `
 
     input CatchUpdate{
         place: ID,
+        location: LocationInput,
         title: String,
         species: String,
         length: LengthInput,
@@ -265,5 +267,10 @@ module.exports = typeDefs = gql `
     input WeightInput{
         value: Float!,
         unit: WeightUnit!
+    }
+
+    input LocationInput {
+        type: String,
+        coordinates: [Float]!
     }
 `

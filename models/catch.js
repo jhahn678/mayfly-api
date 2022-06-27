@@ -9,6 +9,17 @@ const catchSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Place'
     },
+    location: {
+        type: {
+            type: String,
+            enum: ['Point'],
+            default: 'Point'
+        },
+        coordinates: {
+            type: [Number],
+            required: true
+        }
+    },
     publish_type: {
         type: String,
         enum: ['PUBLIC', 'SHARED', 'PRIVATE']
