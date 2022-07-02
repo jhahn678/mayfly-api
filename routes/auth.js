@@ -8,6 +8,7 @@ const generateAuthToken = require('../utils/generateAuthToken')
 const catchAsync = require('../utils/catchAsync')
 const { OAuth2Client } = require('google-auth-library')
 const axios = require('axios')
+const AppError = require('../utils/AppError')
 
 
 router.post('/login', catchAsync(async(req, res) => {
@@ -24,6 +25,7 @@ router.post('/login', catchAsync(async(req, res) => {
         throw new AuthError(401, 'Invalid credentials')
     }
 }))
+
 
 router.post('/register', catchAsync(async(req, res) => {
     const { firstName, lastName, email, username, password } = req.body;
@@ -68,11 +70,13 @@ router.get('/email', catchAsync(async(req, res) => {
 
 router.post('/google', catchAsync(async(req, res) => {
     const { token } = req.body;
+    console.log(token)
     const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
     const ticket = await client.verifyIdToken({
         idToken: token,
         audience: [process.env.GOOGLE_CLIENT_ID_EXPO]
     })
+    if(!ticket) return res.status(400).json({ message: 'Invalid token' })
     const payload = ticket.getPayload()
     const user = await User.findOne({ 'account.googleId': payload.sub })
     if(user){
@@ -112,14 +116,19 @@ router.post('/google', catchAsync(async(req, res) => {
 router.post('/facebook', catchAsync(async(req, res) => {
     const { token } = req.body;
 
-    const response = await axios({ 
-        url: 'https://graph.facebook.com/me',
-        method: 'get',
-        params: {
-            fields: ['id', 'email', 'first_name', 'last_name', 'picture'].join(','),
-            access_token: token
-        }
-    })
+    let response;
+    try{
+        response = await axios({ 
+            url: 'https://graph.facebook.com/me',
+            method: 'get',
+            params: {
+                fields: ['id', 'email', 'first_name', 'last_name', 'picture'].join(','),
+                access_token: token
+            }
+        })
+    }catch(err){
+        res.status(400).json({ message: 'Invalid token' })
+    }
 
     const { id, email, first_name, last_name, picture } = response.data;
     const user = await User.findOne({ 'account.facebookId': id })
@@ -156,6 +165,40 @@ router.post('/facebook', catchAsync(async(req, res) => {
     }
     
 }))
+
+
+router.patch('/register/username', catchAsync(async(req, res) => {
+    const { username, token } = req.body;
+    const payload = await jwt.verify(token, process.env.JWT_SECRET)
+    if(!payload) throw new AuthError(401)
+    const user = await User.findById(payload._id)
+    if(user.details.username || (await User.findOne({ 'details.username': username }))){
+        throw new AppError('User already has a username registered', 400)  
+    }
+    const updated = await User.findByIdAndUpdate(payload._id, {
+        $set: { 'details.username': username }
+    })
+    const newToken = generateAuthToken({ _id: updated._id})
+    return res.status(200).json({
+        token: newToken,
+        user: { ...user.details, _id: updated._id },
+        message: 'Username added to user'
+    })
+}))
+
+
+
+router.get('/me', catchAsync(async(req, res) => {
+    const { token } = req.query;
+    const payload = await jwt.verify(token, process.env.JWT_SECRET)
+    if(!payload) throw new AuthError(401)
+    const user = await User.findById(payload._id)
+    res.status(200).json({ 
+        user: { ...user.details, _id: user._id }
+    })
+}))
+
+
 
 module.exports = router;
 
