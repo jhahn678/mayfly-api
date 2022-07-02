@@ -12,10 +12,12 @@
   "dependencies": {
     "@googlemaps/google-maps-services-js": "^3.3.16",
     "apollo-server-express": "^3.7.0",
+    "axios": "^0.27.2",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
+    "google-auth-library": "^8.1.0",
     "graphql": "^16.5.0",
     "helmet": "^5.0.2",
     "joi": "^17.6.0",

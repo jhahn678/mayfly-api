@@ -7,7 +7,8 @@ const userSchema = new mongoose.Schema({
         fullName: String,
         username: {
             type: String,
-            unique: true
+            unique: true,
+            sparse: true
         },
         avatar: { 
             id: String, 
