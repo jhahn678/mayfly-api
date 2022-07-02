@@ -29,8 +29,7 @@ router.post('/login', catchAsync(async(req, res) => {
 
 router.post('/register', catchAsync(async(req, res) => {
     const { firstName, lastName, email, username, password } = req.body;
-    const registeredUser = await User.findOne({ 'account.email': email.toLowerCase() })
-    if(registeredUser) console.log(registeredUser.details)
+    const registeredUser = await User.findOne({ 'account.email': email.toLowerCase()})
     if(registeredUser) throw new AuthError(400, 'Email already in use')
     const hash = await bcrypt.hash(password, 10)
     const newUser = new User({
@@ -98,7 +97,6 @@ router.post('/google', catchAsync(async(req, res) => {
                 }
             },
             account: {
-                email: payload.email.toLowerCase(),
                 googleId: payload.sub
             }
         })
@@ -123,7 +121,7 @@ router.post('/facebook', catchAsync(async(req, res) => {
             url: 'https://graph.facebook.com/me',
             method: 'get',
             params: {
-                fields: ['id', 'email', 'first_name', 'last_name', 'picture'].join(','),
+                fields: ['id', 'first_name', 'last_name', 'picture'].join(','),
                 access_token: token
             }
         })
@@ -152,7 +150,6 @@ router.post('/facebook', catchAsync(async(req, res) => {
                 }
             },
             account: {
-                email: email.toLowerCase(),
                 facebookId: id
             }
         })

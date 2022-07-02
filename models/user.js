@@ -18,11 +18,7 @@ const userSchema = new mongoose.Schema({
         location: String,
     },
     account: {
-        email: {
-            type: String,
-            unique: true,
-            sparse: true
-        },
+        email: String,
         googleId: {
             type: String,
             unique: true,
