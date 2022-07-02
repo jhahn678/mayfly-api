@@ -30,6 +30,7 @@ router.post('/login', catchAsync(async(req, res) => {
 router.post('/register', catchAsync(async(req, res) => {
     const { firstName, lastName, email, username, password } = req.body;
     const registeredUser = await User.findOne({ 'account.email': email.toLowerCase() })
+    if(registeredUser) console.log(registeredUser.details)
     if(registeredUser) throw new AuthError(400, 'Email already in use')
     const hash = await bcrypt.hash(password, 10)
     const newUser = new User({
@@ -55,14 +56,14 @@ router.post('/register', catchAsync(async(req, res) => {
 
 router.get('/username', catchAsync(async(req, res) => {
     const { value } = req.query
-    const user = await User.findOne({ 'details.username': value })
+    const user = await User.findOne({ 'details.username': value.toLowerCase(0) })
     if(user) return res.status(400).json({ message: 'Username already in use' })
     res.status(200).json({ message: 'Username Available'})
 }))
 
 router.get('/email', catchAsync(async(req, res) => {
     const { value } = req.query;
-    const user = await User.findOne({ 'account.email': value })
+    const user = await User.findOne({ 'account.email': value.toLowerCase() })
     if(user) return res.status(400).json({ message: 'Email already in use' })
     res.status(200).json({ message: 'Email Available'})
 }))
