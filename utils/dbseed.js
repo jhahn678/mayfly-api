@@ -213,7 +213,11 @@ const randomSpecies = () => {
 }
 
 const randomPublishType = () => {
-    Math.random() > .5 ? 'PRIVATE' : 'PUBLIC'
+    if(Math.random() > .5){
+        return 'PRIVATE'
+    }else{
+        return 'PUBLIC'
+    }
 }
 
 const randomPlaceImages = (num) => {

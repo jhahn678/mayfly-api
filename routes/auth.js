@@ -18,7 +18,7 @@ router.post('/login', catchAsync(async(req, res) => {
         const token = generateAuthToken({ _id: user._id})
         return res.status(200).json({ 
             token, 
-            user: { ...user.details, _id: user._id },
+            user: { ...user.details, _id: user._id, createdAt: user.createdAt },
             message: 'Authentication successful' 
         })
     }else{
@@ -48,7 +48,7 @@ router.post('/register', catchAsync(async(req, res) => {
     const token = generateAuthToken({ _id: user._id })
     res.json({ 
         token, 
-        user: { ...user.details, _id: user._id },
+        user: { ...user.details, _id: user._id, createdAt: user.createdAt },
         message: 'User created successfully'
     }).status(200)
 }))
@@ -83,7 +83,7 @@ router.post('/google', catchAsync(async(req, res) => {
         const token = generateAuthToken({ _id: user._id})
         return res.status(200).json({ 
             token, 
-            user: { ...user.details, _id: user._id },
+            user: { ...user.details, _id: user._id, createdAt: user.createdAt },
             message: 'Authentication successful' 
         })
     }else{
@@ -104,7 +104,7 @@ router.post('/google', catchAsync(async(req, res) => {
         const token = generateAuthToken({ _id: savedUser._id})
         return res.status(200).json({ 
             token, 
-            user: { ...savedUser.details, _id: savedUser._id },
+            user: { ...savedUser.details, _id: savedUser._id, createdAt: savedUser.createdAt },
             message: 'User created successfully' 
         })
     }
@@ -136,7 +136,7 @@ router.post('/facebook', catchAsync(async(req, res) => {
         const token = generateAuthToken({ _id: user._id})
         return res.status(200).json({ 
             token, 
-            user: { ...user.details, _id: user._id },
+            user: { ...user.details, _id: user._id, createdAt: user.createdAt },
             message: 'Authentication successful' 
         })
     }else{
@@ -157,7 +157,7 @@ router.post('/facebook', catchAsync(async(req, res) => {
         const token = generateAuthToken({ _id: savedUser._id})
         return res.status(200).json({ 
             token, 
-            user: { ...savedUser.details, _id: savedUser._id },
+            user: { ...savedUser.details, _id: savedUser._id, createdAt: user.createdAt },
             message: 'User created successfully' 
         })
     }
@@ -179,7 +179,7 @@ router.patch('/register/username', catchAsync(async(req, res) => {
     const newToken = generateAuthToken({ _id: updated._id})
     return res.status(200).json({
         token: newToken,
-        user: { ...user.details, _id: updated._id },
+        user: { ...user.details, _id: updated._id, createdAt: user.createdAt },
         message: 'Username added to user'
     })
 }))
@@ -192,7 +192,7 @@ router.get('/me', catchAsync(async(req, res) => {
     if(!payload) throw new AuthError(401)
     const user = await User.findById(payload._id)
     res.status(200).json({ 
-        user: { ...user.details, _id: user._id }
+        user: { ...user.details, _id: user._id, createdAt: user.createdAt }
     })
 }))
 

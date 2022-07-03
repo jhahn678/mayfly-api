@@ -139,7 +139,7 @@ module.exports = typeDefs = gql `
     }
 
     type Media {
-        id: ID!,
+        id: ID,
         url: String
     }
 
