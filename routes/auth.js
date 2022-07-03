@@ -199,8 +199,3 @@ router.get('/me', catchAsync(async(req, res) => {
 
 
 module.exports = router;
-
-
-
-
-// curl -X GET 'https://graph.facebook.com/debug_token?input_token=EAAPVzjFyExMBAPzbqkWKt1mouEZAT11SgaCRCSZAB79utmHxaUeWojPh6QCkbMGPYmzF7K8cbJn8yX1sGFHVw7iXGNkzVY7qo17ZBIp4pmZAGYYjRORpwRZBo1GaDQipbRB0ZAgnB60rIXq2KT9i0Y6UxnlGCraIgZB4OQzhHizYjo7c6kiMNvw&access_token=1079506499670803|RF7HnqxAAb7WNx4lWPnKDxqw5lQ'
