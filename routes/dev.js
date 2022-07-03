@@ -7,7 +7,7 @@ const Message = require('../models/message')
 const Catch = require('../models/catch')
 const { faker } = require('@faker-js/faker')
 const generateAuthToken = require('../utils/generateAuthToken')
-const dbseed = require('../utils/dbseed')
+const { seedDatabaseForAppTesting } = require('../utils/dbseed')
 const {Client} = require('@googlemaps/google-maps-services-js')
 
 router.get('/', async (req, res) => {
@@ -34,7 +34,7 @@ router.post('/clear', async(req, res) => {
 })
 
 router.post('/seed', async(req, res) => {
-    await dbseed()
+    await seedDatabaseForAppTesting()
     res.status(200).json({ message: 'DB seeding complete'})
 })
 
