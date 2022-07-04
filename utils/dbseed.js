@@ -322,7 +322,7 @@ const seedDatabaseForAppTesting = async () => {
 
     const firstName = faker.name.firstName()
     const lastName = faker.name.lastName()
-    const password = await bcrypt.hash('test', 8)
+    const password = await bcrypt.hash('Test', 8)
     const testUser = new User({
         details: {
             firstName: 'Test',
