@@ -80,6 +80,7 @@ module.exports = typeDefs = gql `
         _id: ID,
         user: User,
         place: Place,
+        location: Location,
         publish_type: PublishType!,
         title: String,
         species: String,
