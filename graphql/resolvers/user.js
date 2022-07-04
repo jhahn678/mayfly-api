@@ -49,13 +49,13 @@ module.exports = {
                 { _id: userId },
                 { 'pending_contacts.user': { $ne: auth._id } }
             ]}, {
-                $push: { pending_contacts: { user: auth._id, status: 'FROM', createdAt: Date.now() }}
+                $push: { pending_contacts: { user: auth._id, status: 'FROM', createdAt: new Date().toISOString() }}
             })
             const user = await User.findOneAndUpdate({ $and: [
                 { _id: auth._id },
                 { 'pending_contacts.user': { $ne: userId } }
             ]},{
-                $push: { pending_contacts: { user: userId, status: 'TO', createdAt: Date.now() }}
+                $push: { pending_contacts: { user: userId, status: 'TO', createdAt: new Date().toISOString() }}
             }, { new: true })
             if(!user) throw new AppError(400, 'User is already in your contacts')
             return user.pending_contacts;

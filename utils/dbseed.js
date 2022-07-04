@@ -344,12 +344,12 @@ const seedDatabaseForAppTesting = async () => {
             {
                 user: userIds[42],
                 status: 'TO',
-                createdAt: Date.now()
+                createdAt: new Date().toISOString()
             },
             {
                 user: userIds[43],
                 status: 'FROM',
-                createdAt: Date.now()
+                createdAt: new Date().toISOString()
             }
         ]
     })
@@ -358,14 +358,14 @@ const seedDatabaseForAppTesting = async () => {
         $push: { pending_contacts: { 
             user: user._id,
             status: 'FROM',
-            createdAt: Date.now()
+            createdAt: new Date().toISOString()
         }}
     })
     await User.findByIdAndUpdate(userIds[43], { 
         $push: { pending_contacts: { 
             user: user._id,
             status: 'TO',
-            createdAt: Date.now()
+            createdAt: new Date().toISOString()
         }}
     })
 

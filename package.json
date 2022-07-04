@@ -19,6 +19,7 @@
     "express": "^4.18.1",
     "google-auth-library": "^8.1.0",
     "graphql": "^16.5.0",
+    "graphql-scalars": "^1.17.0",
     "helmet": "^5.0.2",
     "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",

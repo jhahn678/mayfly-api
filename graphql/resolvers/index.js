@@ -3,6 +3,7 @@ const groupResolvers = require('./group')
 const messageResolvers = require('./message')
 const placeResolvers = require('./place')
 const catchResolvers = require('./catch')
+const { DateTimeResolver } = require('graphql-scalars')
 
 module.exports = {
     Query: {
@@ -23,5 +24,6 @@ module.exports = {
     Group: { ...groupResolvers.Group },
     Message: { ...messageResolvers.Message },
     Place: { ...placeResolvers.Place },
-    Catch: { ...catchResolvers.Catch }
+    Catch: { ...catchResolvers.Catch },
+    DateTime: DateTimeResolver
 }

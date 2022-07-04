@@ -54,7 +54,7 @@ const userSchema = new mongoose.Schema({
                 type: String,
                 enum: ['TO', 'FROM']
             },
-            createdAt: Number
+            createdAt: Date
         }
     ],
     places: [

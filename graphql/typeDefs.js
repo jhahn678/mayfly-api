@@ -1,6 +1,8 @@
 const { gql } = require('apollo-server-express')
 
 module.exports = typeDefs = gql `
+    scalar DateTime
+
     type User {
         _id: ID,
         details: UserDetails,
@@ -10,8 +12,8 @@ module.exports = typeDefs = gql `
         pending_contacts: [PendingContact],
         places: [Place],
         catches: [Catch],
-        createdAt: String,
-        updatedAt: String
+        createdAt: DateTime,
+        updatedAt: DateTime
     }
 
     type UserDetails {
@@ -57,7 +59,8 @@ module.exports = typeDefs = gql `
         locality: String,
         location: Location,
         media: [Media]
-        createdAt: String
+        createdAt: DateTime,
+        updatedAt: DateTime
     }
 
     type Location {
@@ -84,7 +87,8 @@ module.exports = typeDefs = gql `
         weight: Weight,
         rig: String,
         media: [Media]
-        createdAt: String,
+        createdAt: DateTime,
+        updatedAt: DateTime
     }
 
     type Length {
@@ -121,8 +125,9 @@ module.exports = typeDefs = gql `
         avatar: Media,
         name: String,
         media: [Media],
-        createdAt: String,
-        created_by: User!
+        created_by: User!,
+        createdAt: DateTime,
+        updatedAt: DateTime
     }
 
 
@@ -135,7 +140,8 @@ module.exports = typeDefs = gql `
         type: MessageType,
         body: String,
         media: [Media],
-        createdAt: String
+        createdAt: DateTime,
+        updatedAt: DateTime
     }
 
     type Media {
