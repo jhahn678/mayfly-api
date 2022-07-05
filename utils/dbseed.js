@@ -377,7 +377,7 @@ const seedDatabaseForAppTesting = async () => {
 
     const newGroup = new Group({
         created_by: user._id,
-        users: groupUsers,
+        users: [...groupUsers, user._id],
         avatar: { url: faker.image.nature() },
         name: 'The test group',
         media: randomPlaceImages(5)
