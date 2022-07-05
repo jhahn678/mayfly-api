@@ -20,6 +20,9 @@ module.exports = {
         ...placeResolvers.Mutation,
         ...catchResolvers.Mutation
     },
+    Subscription: {
+        ...messageResolvers.Subscription
+    },
     User: { ...userResolvers.User },
     Group: { ...groupResolvers.Group },
     Message: { ...messageResolvers.Message },

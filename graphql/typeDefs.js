@@ -190,6 +190,12 @@ module.exports = typeDefs = gql `
         deleteCatch(catchId: ID!): [Catch]
     }
 
+
+    type Subscription {
+        messageCreated(groupId: ID!): Message
+    }
+
+
     input MessageInput {
         group: ID!,
         body: String, 
