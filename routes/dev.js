@@ -10,27 +10,11 @@ const generateAuthToken = require('../utils/generateAuthToken')
 const { seedDatabaseForAppTesting } = require('../utils/dbseed')
 const {Client} = require('@googlemaps/google-maps-services-js')
 
-router.get('/', async (req, res) => {
-    const users = await User.updateMany({}, {
-        $set: { pending_contacts: [] }
-    }, {new: true})
-
-    res.status(200).json(users)
-})
 
 router.get('/token', async(req, res) => {
     const { user } = req.query;
     const token = await generateAuthToken({ _id: user })
     res.status(200).json(token)
-})
-
-
-router.post('/clear', async(req, res) => {
-    await User.deleteMany({})
-    await Group.deleteMany({})
-    await Place.deleteMany({})
-    await Message.deleteMany({})
-    await Catch.deleteMany({})
 })
 
 router.post('/seed', async(req, res) => {
