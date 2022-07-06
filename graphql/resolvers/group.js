@@ -9,9 +9,10 @@ const AppError = require('../../utils/AppError')
 
 module.exports = {
     Query: {
-        getGroup: async (_, { groupId }) => {
+        getGroup: async (_, { groupId }, { auth }) => {
             const group = await Group.findById(groupId)
             if(!group) throw new AppError('Resource not found', 400)
+            if(!group.users.includes(auth._id)) throw new AuthError(401, 'Not authorized')
             return group;
         },
         getGroups: async () => {
