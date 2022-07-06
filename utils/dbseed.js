@@ -333,7 +333,7 @@ const seedDatabaseForAppTesting = async () => {
                 url: faker.image.avatar()
             },
             bio: faker.random.words(12),
-            location: `${faker.address.cityName()}, ${faker.address.stateAbbr}`
+            location: `${faker.address.cityName()}, ${faker.address.stateAbbr()}`
         },
         account: {
             email: 'test@test.com',
@@ -386,7 +386,7 @@ const seedDatabaseForAppTesting = async () => {
     const group = await newGroup.save()
 
 
-    for(let uid of groupUsers){
+    for(let uid of  [...groupUsers, user._id]){
         await User.findByIdAndUpdate(uid, {
             $push: { groups: group._id }
         })
