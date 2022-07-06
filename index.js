@@ -36,18 +36,24 @@ async function startServer() {
     
     const serverCleanup = useServer({ 
         schema: schema,
-        // context: async (ctx) => {
-        //     const payload = await getAuthToken(req.headers.authorization)
-        //     return { auth: payload ? payload : null }
-        // },
+        context: async (ctx) => {
+            if(ctx.connectionParams?.Authorization){
+                const payload = await getAuthToken(ctx.connectionParams.Authorization)
+                return { auth: payload }
+            }
+            return { auth: null }
+        },
     }, wsServer);
 
     const server = new ApolloServer({ 
         schema: schema,
         csrfPrevention: true,
         context: async ({ req }) => {
-            const payload = await getAuthToken(req.headers.authorization)
-            return { auth: payload || null }
+            if(req.headers.authorization){
+                const payload = await getAuthToken(req.headers.authorization)
+                return { auth: payload }
+            }
+            return { auth: null}
         },
         plugins: [
             ApolloServerPluginDrainHttpServer({ httpServer: httpServer }),
