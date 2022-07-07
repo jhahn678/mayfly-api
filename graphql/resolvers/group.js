@@ -86,8 +86,9 @@ module.exports = {
         users: async ({ users }) => {
             return (await User.find({ _id: { $in: users } }))
         },
-        messages: async ({ messages }) => {
-            return (await Message.find({ _id: { $in: messages }}))
+        messages: async ({ messages }, { offset=0, limit=50 }) => {
+            const slice = messages.slice(offset, (offset + limit) )
+            return (await Message.find({ _id: { $in: slice }}))
         },
         latest_message: async ({ latest_message }) => {
             return (await Message.findById(latest_message))

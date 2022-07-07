@@ -119,7 +119,7 @@ module.exports = typeDefs = gql `
     type Group {
         _id: ID,
         users: [User],
-        messages: [Message],
+        messages(offset: Int, limit: Int): [Message],
         latest_message: Message,
         places: [Place],
         catches: [Catch]
