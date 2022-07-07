@@ -107,16 +107,29 @@ module.exports = {
         }
     },
     User: {
-        groups: async ({ groups }) => {
+        groups: async ({ _id, groups }, _, { auth }) => {
+            if(_id.toString() !== auth._id) return null
             return (await Group.find({ _id: { $in: groups }}))
         },
-        contacts: async ({ contacts }) => {
+        contacts: async ({ _id, contacts }, _, { auth }) => {
             return (await User.find({ _id: { $in: contacts }}))
         },
-        catches: async ({ catches }) => {
+        catches: async ({ _id, catches }, _, { auth }) => {
+            if(_id.toString() !== auth._id){
+                return (await Catch.find({ $and: [
+                    { _id: { $in: catches } },
+                    { publish_type: { $ne: 'PRIVATE' }}
+                ]}))
+            }
             return (await Catch.find({ _id: { $in: catches }}))
         },
-        places: async ({ places }) => {
+        places: async ({ _id, places }, _, { auth }) => {
+            if(_id.toString() !== auth._id){
+                return (await Place.find({ $and: [
+                    { _id: { $in: places } },
+                    { publish_type: { $ne: 'PRIVATE' }}
+                ]}))
+            }
             return (await Place.find({ _id: { $in: places }}))
         }
     }
