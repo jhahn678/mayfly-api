@@ -7,9 +7,15 @@ const { Client } = require('@googlemaps/google-maps-services-js')
 
 module.exports = {
     Query: {
-        getPlace: async (_, { placeId } ) => {
-            console.log(placeId)
-            return (await Place.findById(placeId))
+        getPlace: async (_, { placeId }, { auth } ) => {
+            const place = await Place.findById(placeId)
+            if(place.publish_type === 'PUBLIC' || auth._id === place.user) return place;
+            if(place.publish_type === 'PRIVATE') throw new AuthError(403, 'Not authorized')
+            if(place.publish_type === 'SHARED'){
+                const user = await User.findById(auth._id)
+                if(!user.groups.includes(place.group)) return null
+                return place;
+            }
         },
         getPlaces: async () => {
             return (await Place.find({ publish_type: 'PUBLIC' }))
@@ -44,7 +50,7 @@ module.exports = {
             await User.findByIdAndUpdate(auth._id, {
                 $push: { places: place._id }
             })
-            if(placeInput.group) ( await Group.findByIdAndUpdate(placeInput.group, {
+            if(placeInput?.group) ( await Group.findByIdAndUpdate(placeInput.group, {
                 $push: { places: place._id }
             }))
             return place;

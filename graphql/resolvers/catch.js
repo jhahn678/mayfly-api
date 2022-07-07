@@ -7,9 +7,18 @@ const AuthError = require('../../utils/AuthError')
 
 module.exports = {
     Query: {
-        getCatch: async (_, { catchId }) => {
+        getCatch: async (_, { catchId }, { auth }) => {
             const catchDoc = await Catch.findById(catchId)
             if(!catchDoc) throw new AppError('Resource not found', 400)
+            if(auth._id === catchDoc.user || catchDoc.publish_type === 'PUBLIC') return catchDoc
+            if(catchDoc.publish_type === 'PRIVATE') throw new AuthError(403, 'Unauthorized -- Resource is private')
+            if(catchDoc.publish_type === 'SHARED'){
+                const user = await User.findById(auth._id)
+                if(!user.groups.includes(catchDoc.group)){
+                    throw new AuthError(403, 'Unauthorized -- Requesting user is not in group')
+                }
+                return catchDoc;
+            }
             return catchDoc;
         }
     },
