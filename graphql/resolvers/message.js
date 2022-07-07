@@ -46,7 +46,7 @@ module.exports = {
             subscribe: withFilter(
                 () => pubsub.asyncIterator(['MESSAGE_CREATED']),
                 (payload, variables) => {
-                    return (payload.messageCreated.group === variables.groupId )
+                    return (payload.messageCreated.group === variables.groupId)
                 }
             )
         }

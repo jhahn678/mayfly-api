@@ -37,6 +37,7 @@ async function startServer() {
     const serverCleanup = useServer({ 
         schema: schema,
         context: async (ctx) => {
+            console.log(ctx.connectionParams)
             if(ctx.connectionParams?.Authorization){
                 const payload = await getAuthToken(ctx.connectionParams.Authorization)
                 return { auth: payload }
