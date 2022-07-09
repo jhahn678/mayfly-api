@@ -111,8 +111,18 @@ module.exports = {
             if(_id.toString() !== auth._id) return null
             return (await Group.find({ _id: { $in: groups }}))
         },
-        contacts: async ({ _id, contacts }, _, { auth }) => {
+        contacts: async ({ contacts }) => {
+            console.log(contacts)
             return (await User.find({ _id: { $in: contacts }}))
+        },
+        pending_contacts: async ({ pending_contacts }) => {
+            let resolved = []
+            for(let contact of pending_contacts){
+                const user = await User.findById(contact.user)
+                resolved.push({ user, status: contact.status, createdAt: contact.createdAt })
+            }
+            console.log(resolved)
+            return resolved;
         },
         catches: async ({ _id, catches }, _, { auth }) => {
             if(_id.toString() !== auth._id){

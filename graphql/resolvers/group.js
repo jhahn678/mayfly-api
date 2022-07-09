@@ -86,9 +86,18 @@ module.exports = {
         users: async ({ users }) => {
             return (await User.find({ _id: { $in: users } }))
         },
+        total_users: ({ users }) => {
+            return users.length;
+        },
         messages: async ({ messages }, { offset=0, limit=50 }) => {
-            const slice = messages.slice(offset, (offset + limit) )
+            if(offset > messages.length) return [];
+            const end = messages.length - offset;
+            const start = (end - limit < 0) ? 0 : (end - limit); 
+            const slice = messages.slice(start, end)
             return (await Message.find({ _id: { $in: slice }}))
+        },
+        total_messages: ({ messages }) => {
+            return messages.length;
         },
         latest_message: async ({ latest_message }) => {
             return (await Message.findById(latest_message))

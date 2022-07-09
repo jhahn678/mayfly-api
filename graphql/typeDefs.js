@@ -37,7 +37,7 @@ module.exports = typeDefs = gql `
     type PendingContact {
         user: User!,
         status: Status,
-        createdAt: Float!
+        createdAt: DateTime
     }
 
     enum Status {
@@ -119,7 +119,9 @@ module.exports = typeDefs = gql `
     type Group {
         _id: ID,
         users: [User],
+        total_users: Int,
         messages(offset: Int, limit: Int): [Message],
+        total_messages: Int,
         latest_message: Message,
         places: [Place],
         catches: [Catch]
