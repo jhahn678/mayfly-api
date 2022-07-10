@@ -121,7 +121,6 @@ module.exports = {
                 const user = await User.findById(contact.user)
                 resolved.push({ user, status: contact.status, createdAt: contact.createdAt })
             }
-            console.log(resolved)
             return resolved;
         },
         catches: async ({ _id, catches }, _, { auth }) => {
