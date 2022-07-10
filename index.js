@@ -12,6 +12,7 @@ const resolvers = require('./graphql/resolvers')
 const getAuthToken = require('./utils/getAuthToken')
 const authRoutes = require('./routes/auth')
 const devRoutes = require('./routes/dev')
+const usersRoutes = require('./routes/users')
 const { notFound, errorHandler } = require('./controllers/errors')
 const PORT = process.env.PORT || 7500
 
@@ -77,6 +78,7 @@ async function startServer() {
     app.use(express.json())
     app.use('/dev', devRoutes)
     app.use('/auth', authRoutes)
+    app.use('/users', usersRoutes)
     app.get('/', (req, res) => res.send('This is the Mayfly API!'))
     app.use('*', notFound)
     app.use('*', errorHandler)
